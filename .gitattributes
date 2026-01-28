@@ -1,0 +1,3 @@
+# Enforce LF line endings for Terraform
+*.tf text eol=lf
+*.tfvars text eol=lf
