@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahmed's CI/CD Pipeline</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        overflow: hidden;
+        color: #fff;
+        text-align: center;
+    }
+
+    /* Floating particles */
+    .particle {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        animation: float 6s infinite;
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0) translateX(0); opacity: 1; }
+        50% { transform: translateY(-100px) translateX(50px); opacity: 0.5; }
+        100% { transform: translateY(0) translateX(0); opacity: 1; }
+    }
+
+    .container {
+        z-index: 1;
+    }
+
+    h1 {
+        font-size: 3em;
+        margin-bottom: 0.5em;
+        animation: popIn 1s ease-out;
+    }
+
+    p {
+        font-size: 1.5em;
+        margin-top: 0.3em;
+        animation: popIn 1.5s ease-out;
+    }
+
+    .highlight {
+        background: rgba(255,255,255,0.2);
+        padding: 0.3em 0.6em;
+        border-radius: 8px;
+        font-weight: 700;
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 20px;
+        font-size: 1em;
+        color: rgba(255,255,255,0.8);
+    }
+
+    @keyframes popIn {
+        0% { transform: scale(0); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Floating particles -->
+<div class="particle" style="top:20%; left:10%; animation-delay: 0s;"></div>
+<div class="particle" style="top:40%; left:30%; animation-delay: 1s;"></div>
+<div class="particle" style="top:60%; left:50%; animation-delay: 2s;"></div>
+<div class="particle" style="top:80%; left:70%; animation-delay: 3s;"></div>
+<div class="particle" style="top:50%; left:90%; animation-delay: 4s;"></div>
+
+<div class="container">
+    <h1>Ahmed's CI/CD Pipeline</h1>
+    <p>Powered by <span class="highlight">Terraform + LocalStack</span></p>
+</div>
+
+<div class="footer">Created by Ahmed Laiq</div>
+
+</body>
+</html>

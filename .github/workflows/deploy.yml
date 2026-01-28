@@ -1,0 +1,82 @@
+name: Terraform CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    env:
+      TF_ROOT: terraform
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1
+
+    steps:
+      # 1️⃣ Checkout repo
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # 2️⃣ Start LocalStack (Community Edition)
+      - name: Start LocalStack
+        uses: LocalStack/setup-localstack@v0.2.3
+        with:
+          image-tag: latest
+          install-awslocal: true
+        # No auth token needed for Community Edition
+
+      # 3️⃣ Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      # 4️⃣ Terraform init (must run before validate)
+      - name: Terraform Init
+        working-directory: ${{ env.TF_ROOT }}
+        run: terraform init
+
+      # 5️⃣ Terraform fmt + validate
+      - name: Terraform fmt + validate
+        working-directory: ${{ env.TF_ROOT }}
+        run: |
+          terraform fmt -check
+          terraform validate
+
+      # 6️⃣ Terraform plan
+      - name: Terraform Plan
+        working-directory: ${{ env.TF_ROOT }}
+        run: |
+          if [ "${{ github.ref_name }}" = "dev" ]; then
+            terraform plan -var-file="dev.tfvars"
+          else
+            terraform plan -var-file="prod.tfvars"
+          fi
+
+      # 7️⃣ Terraform apply
+      - name: Terraform Apply
+        working-directory: ${{ env.TF_ROOT }}
+        run: |
+          if [ "${{ github.ref_name }}" = "dev" ]; then
+            terraform apply -var-file="dev.tfvars" -auto-approve
+          else
+            terraform apply -var-file="prod.tfvars" -auto-approve
+          fi
+
+      # 8️⃣ Smoke Test
+      - name: Run Smoke Test
+        run: |
+          if [ "${{ github.ref_name }}" = "dev" ]; then
+            bash tests/smoke_test.sh myapp dev
+          else
+            bash tests/smoke_test.sh myapp prod
+          fi
+
+      # 9️⃣ Terraform outputs
+      - name: Terraform Outputs
+        working-directory: ${{ env.TF_ROOT }}
+        run: terraform output
