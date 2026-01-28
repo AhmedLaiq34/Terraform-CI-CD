@@ -6,8 +6,6 @@ A fully automated Terraform CI/CD pipeline for AWS S3 deployments, designed for 
 
 - Project Overview
 
-- Project Structure
-
 - Features
 
 - Tech Stack
@@ -28,28 +26,6 @@ This project automates the provisioning of AWS S3 buckets and deploys static web
 It uses LocalStack to emulate AWS locally, so you can safely test infrastructure and CI/CD workflows without using a real AWS account.
 
 The pipeline automatically formats and validates Terraform code, applies infrastructure per environment (dev / prod), and runs smoke tests to ensure deployments work as expected.
-
-## Project Structure
-terraform-ci-cd/
-├─ terraform/                   # Root Terraform folder
-│  ├─ main.tf                   # Boilerplate for provider and modules
-│  ├─ variables.tf              # Global variables
-│  ├─ outputs.tf                # Outputs to expose key values
-│  ├─ backend.tf                # Backend config (if needed)
-│  ├─ dev.tfvars                # Development environment variables
-│  ├─ prod.tfvars               # Production environment variables
-│  └─ modules/
-│     └─ s3_bucket/
-│        ├─ main.tf             # S3 bucket & object resources
-│        ├─ variables.tf        # Module-specific variables
-│        └─ outputs.tf          # Module-specific outputs
-├─ tests/
-│  └─ smoke_test.sh             # Script to test S3 bucket deployment
-├─ .github/workflows/
-│  └─ deploy.yaml               # CI/CD workflow with GitHub Actions
-├─ app/
-│  └─ index.html                # Example static website to deploy
-└─ README.md
 
 ## Features
 
