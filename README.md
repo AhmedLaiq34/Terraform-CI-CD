@@ -1,8 +1,8 @@
-#Terraform CI/CD Pipeline
+# Terraform CI/CD Pipeline
 
 A fully automated Terraform CI/CD pipeline for AWS S3 deployments, designed for safe local testing with LocalStack and GitHub Actions. This project demonstrates core DevOps skills like infrastructure automation, modular Terraform code, CI/CD, and secure testing — essential for real-world engineering environments.
 
-##Table of Contents
+## Table of Contents
 
 - Project Overview
 
@@ -22,14 +22,14 @@ A fully automated Terraform CI/CD pipeline for AWS S3 deployments, designed for 
 
 - Contributing
 
-##Project Overview
+## Project Overview
 
 This project automates the provisioning of AWS S3 buckets and deploys static websites to them.
 It uses LocalStack to emulate AWS locally, so you can safely test infrastructure and CI/CD workflows without using a real AWS account.
 
 The pipeline automatically formats and validates Terraform code, applies infrastructure per environment (dev / prod), and runs smoke tests to ensure deployments work as expected.
 
-##Project Structure
+## Project Structure
 terraform-ci-cd/
 ├─ terraform/                   # Root Terraform folder
 │  ├─ main.tf                   # Boilerplate for provider and modules
@@ -51,7 +51,7 @@ terraform-ci-cd/
 │  └─ index.html                # Example static website to deploy
 └─ README.md
 
-##Features
+## Features
 
 ✅ Automated provisioning of AWS S3 buckets using Terraform modules
 
@@ -65,7 +65,7 @@ terraform-ci-cd/
 
 ✅ Secure credentials management using GitHub Secrets
 
-##Tech Stack
+## Tech Stack
 
 Terraform — Infrastructure as Code (modular)
 
@@ -77,8 +77,8 @@ Bash — Smoke test scripting
 
 HTML/CSS — Example static site deployment
 
-##Getting Started
-###Prerequisites
+## Getting Started
+### Prerequisites
 
 Docker
 
@@ -88,39 +88,39 @@ Git
 
 Bash (Git Bash on Windows)
 
-###Clone the Repository
+### Clone the Repository
 git clone https://github.com/<username>/terraform-ci-cd.git
 cd terraform-ci-cd/terraform
 
-###Run Locally with LocalStack
+### Run Locally with LocalStack
 
 Start LocalStack:
 
 docker run --rm -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack
 
 
-###Initialize Terraform:
+### Initialize Terraform:
 
 terraform init
 
 
-###Validate Terraform configuration:
+### Validate Terraform configuration:
 
 terraform fmt -check
 terraform validate
 
 
-###Plan and apply:
+### Plan and apply:
 
 terraform plan -var-file=dev.tfvars
 terraform apply -var-file=dev.tfvars -auto-approve
 
 
-###Run smoke test:
+### Run smoke test:
 
 bash ../tests/smoke_test.sh myapp dev
 
-###CI/CD Workflow
+### CI/CD Workflow
 
 The GitHub Actions workflow (deploy.yaml) does the following automatically on push to dev or main:
 
