@@ -27,56 +27,73 @@ jobs:
         with:
           image-tag: latest
           install-awslocal: true
-        # No auth token needed for Community Edition
 
-      # 3️⃣ Setup Terraform
+      # 3️⃣ Wait for LocalStack to be ready
+      - name: Wait for LocalStack
+        run: |
+          echo "Waiting for LocalStack S3 to be ready..."
+          for i in {1..15}; do
+            if curl -s http://localhost:4566/health | grep '"s3":"running"' > /dev/null; then
+              echo "LocalStack S3 is ready!"
+              break
+            else
+              echo "Waiting 2s..."
+              sleep 2
+            fi
+          done
+
+      # 4️⃣ Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.0
 
-      # 4️⃣ Terraform init (must run before validate)
+      # 5️⃣ Terraform init
       - name: Terraform Init
         working-directory: ${{ env.TF_ROOT }}
-        run: terraform init
+        run: terraform init -input=false -no-color
 
-      # 5️⃣ Terraform fmt + validate
+      # 6️⃣ Terraform fmt + validate
       - name: Terraform fmt + validate
         working-directory: ${{ env.TF_ROOT }}
         run: |
+          set -x
           terraform fmt -check
-          terraform validate
+          terraform validate -no-color
 
-      # 6️⃣ Terraform plan
+      # 7️⃣ Terraform plan
       - name: Terraform Plan
         working-directory: ${{ env.TF_ROOT }}
         run: |
+          set -x
           if [ "${{ github.ref_name }}" = "dev" ]; then
-            terraform plan -var-file="dev.tfvars"
+            terraform plan -var-file="dev.tfvars" -no-color
           else
-            terraform plan -var-file="prod.tfvars"
+            terraform plan -var-file="prod.tfvars" -no-color
           fi
 
-      # 7️⃣ Terraform apply
+      # 8️⃣ Terraform apply
       - name: Terraform Apply
         working-directory: ${{ env.TF_ROOT }}
         run: |
+          set -x
           if [ "${{ github.ref_name }}" = "dev" ]; then
-            terraform apply -var-file="dev.tfvars" -auto-approve
+            terraform apply -var-file="dev.tfvars" -auto-approve -no-color
           else
-            terraform apply -var-file="prod.tfvars" -auto-approve
+            terraform apply -var-file="prod.tfvars" -auto-approve -no-color
           fi
 
-      # 8️⃣ Smoke Test
+      # 9️⃣ Smoke Test
       - name: Run Smoke Test
         run: |
+          set -x
           if [ "${{ github.ref_name }}" = "dev" ]; then
             bash tests/smoke_test.sh myapp dev
           else
             bash tests/smoke_test.sh myapp prod
           fi
 
-      # 9️⃣ Terraform outputs
+      # 🔟 Terraform outputs
       - name: Terraform Outputs
         working-directory: ${{ env.TF_ROOT }}
-        run: terraform output
+        run: terraform output -no-color
